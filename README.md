@@ -1,76 +1,53 @@
-## Curiosity-driven Exploration by Self-supervised Prediction ##
-#### In ICML 2017 [[Project Website]](http://pathak22.github.io/noreward-rl/) [[Demo Video]](http://pathak22.github.io/noreward-rl/index.html#demoVideo)
+# My personal journey through curiosity-driven RL, over 42 minutes.
 
-[Deepak Pathak](https://people.eecs.berkeley.edu/~pathak/), [Pulkit Agrawal](https://people.eecs.berkeley.edu/~pulkitag/), [Alexei A. Efros](https://people.eecs.berkeley.edu/~efros/), [Trevor Darrell](https://people.eecs.berkeley.edu/~trevor/)<br/>
-University of California, Berkeley<br/>
+# Please see the original repository. Most of this is NOT MY WORK. I'm just making it run.
 
-<img src="images/mario1.gif" width="300">    <img src="images/vizdoom.gif" width="351">
+0. Watched this video: https://youtu.be/J3FHOyhUn3A
 
-This is a tensorflow based implementation for our [ICML 2017 paper on curiosity-driven exploration for reinforcement learning](http://pathak22.github.io/noreward-rl/). Idea is to train agent with intrinsic curiosity-based motivation (ICM) when external rewards from environment are sparse. Surprisingly, you can use ICM even when there are no rewards available from the environment, in which case, agent learns to explore only out of curiosity: 'RL without rewards'. If you find this work useful in your research, please cite:
+1. Tried installing with the commands provided in the paper. Replaced libav-tools with ffmpeg.
 
-    @inproceedings{pathakICMl17curiosity,
-        Author = {Pathak, Deepak and Agrawal, Pulkit and
-                  Efros, Alexei A. and Darrell, Trevor},
-        Title = {Curiosity-driven Exploration by Self-supervised Prediction},
-        Booktitle = {International Conference on Machine Learning ({ICML})},
-        Year = {2017}
-    }
+2. followed rest of the commands, up to and including `python curiosity/src/go-vncdriver/build.py`
 
-### 1) Installation and Usage
-1.  This code is based on [TensorFlow](https://www.tensorflow.org/). To install, run these commands:
-  ```Shell
-  # you might not need many of these, e.g., fceux is only for mario
-  sudo apt-get install -y python-numpy python-dev cmake zlib1g-dev libjpeg-dev xvfb \
-  libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig python3-dev \
-  python3-venv make golang libjpeg-turbo8-dev gcc wget unzip git fceux virtualenv \
-  tmux
+3. Eeek scary red errors. Tried to resolve by running `sudo apt-get install -y python-numpy cmake zlib1g-dev libjpeg-dev libboost-all-dev gcc libsdl2-dev wget unzip`. Had those already.
 
-  # install the code
-  git clone -b master --single-branch https://github.com/pathak22/noreward-rl.git
-  cd noreward-rl/
-  virtualenv curiosity
-  source $PWD/curiosity/bin/activate
-  pip install numpy
-  pip install -r src/requirements.txt
-  python curiosity/src/go-vncdriver/build.py
+4. Tried running `python curiosity/src/go-vncdriver/build.py` again.
 
-  # download models
-  bash models/download_models.sh
+5. seemed to work (no output or anything)
 
-  # setup customized doom environment
-  cd doomFiles/
-  # then follow commands in doomFiles/README.md
-  ```
+6. Downloaded models
+`bash models/download_models.sh`
 
-2. Running demo
-  ```Shell
-  cd noreward-rl/src/
-  python demo.py --ckpt ../models/doom/doom_ICM
-  python demo.py --env-id SuperMarioBros-1-1-v0 --ckpt ../models/mario/mario_ICM
-  ```
+7. followed instructions in doomfiles/readme.md
 
-3. Training code
-  ```Shell
-  cd noreward-rl/src/
-  # For Doom: doom or doomSparse or doomVerySparse
-  python train.py --default --env-id doom
+8. stuff failed (cp couldnt find directory)
 
-  # For Mario, change src/constants.py as follows:
-  # PREDICTION_BETA = 0.2
-  # ENTROPY_BETA = 0.0005
-  python train.py --default --env-id mario --noReward
+9. investigated. turns out installing doom-py failed. Tried `pip install doom-py`
 
-  xvfb-run -s "-screen 0 1400x900x24" bash  # only for remote desktops
-  # useful xvfb link: http://stackoverflow.com/a/30336424
-  python inference.py --default --env-id doom --record
-  ```
+10. same error message as in 3. Went searching on the internet. Found this page:
 
-### 2) Other helpful pointers
-- [Paper](https://pathak22.github.io/noreward-rl/resources/icml17.pdf)
-- [Project Website](http://pathak22.github.io/noreward-rl/)
-- [Demo Video](http://pathak22.github.io/noreward-rl/index.html#demoVideo)
-- [Reddit Discussion](https://redd.it/6bc8ul)
-- [Media Articles (New Scientist, MIT Tech Review and others)](http://pathak22.github.io/noreward-rl/index.html#media)
+https://github.com/mwydmuch/ViZDoom/blob/master/doc/Building.md#-linux
 
-### 3) Acknowledgement
-Vanilla A3C code is based on the open source implementation of [universe-starter-agent](https://github.com/openai/universe-starter-agent).
+and ran this: 
+
+```
+sudo apt-get install build-essential zlib1g-dev libsdl2-dev libjpeg-dev \
+nasm tar libbz2-dev libgtk2.0-dev cmake git libfluidsynth-dev libgme-dev \
+libopenal-dev timidity libwildmidi-dev unzip
+```
+11. Tried `pip install doom-py` again. still failure.
+
+12. it seemed like python was erroring rather than c; so ran `pip3 install doom-py`  instead of pip install.
+
+13. my bad, they were c warnings. I found 'could not find boost' in error messages so am installing boost.
+
+14. apt says i already have boost. Tried following remaining steps in building.md above.
+
+15. tried getting julia from apt, didn't work. Went here instead:
+
+https://askubuntu.com/questions/842042/problems-installing-julia-language
+
+16. that didn't work (`julia` at terminal didnt work) so I used `sudo snap install julia --classic` instead.
+
+17. julia apparently doesn't like my platform. I think this rabbit hole has gone too deep. RIP.
+
+I will inspect the source code later.
